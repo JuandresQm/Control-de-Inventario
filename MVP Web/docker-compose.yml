@@ -5,12 +5,37 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: MVP_JQ
+      POSTGRES_DB: mvp_jq
     ports:
       - "5433:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
       - ./bd.sql:/docker-entrypoint-initdb.d/bd.sql
+    restart: always
+
+  backend:
+    build: ./backend
+    container_name: inventario_backend
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=123456
+      - DB_NAME=mvp_jq
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: inventario_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
 
 volumes:
-  pgdata:
+  postgres_data:
