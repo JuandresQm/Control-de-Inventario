@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { ActualizarStockDto } from './dto/actualizar-stock.dto.js';
 import { InventarioService } from './inventario.service.js';
 import { Inventario } from './inventario.entity.js';
 
@@ -13,12 +14,8 @@ export class InventarioController {
 
   @Post()
   async actualizar(
-    @Body() body: { productoId: number; ubicacionId: number; cantidad: number },
+    @Body() body: ActualizarStockDto,
   ): Promise<Inventario> {
-    return await this.inventarioService.actualizarStock(
-      body.productoId,
-      body.ubicacionId,
-      body.cantidad,
-    );
+    return this.inventarioService.actualizarStock(body);
   }
 }
